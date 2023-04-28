@@ -1,0 +1,95 @@
+<html>
+<head>
+  <style>
+    #word {
+      font-size: 36px;
+      letter-spacing: 10px;
+    }
+    #guesses {
+      font-size: 24px;
+    }
+    #message {
+      font-size: 24px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Guessing Game</h1>
+  <p>Guess the Spanish word by typing letters. The words are from the Abril story. You have 10 chances.</p>
+  <div id="word">_ _ _ _ _</div>
+  <div id="guesses">Guesses: </div>
+  <div id="message"></div>
+  <script>
+    // A list of Spanish words
+    var words = ["madre", "hermano", "gato", "carro", "chica", "parque", "familia", "hay", "bajar", "besa"];
+    
+    // Pick a random word
+    var word = words[Math.floor(Math.random() * words.length)];
+    
+    // An array to store the guessed letters
+    var guessed = [];
+    
+    // A variable to store the number of wrong guesses
+    var wrong = 0;
+    
+    // A variable to store the maximum number of wrong guesses
+    var maxWrong = 10;
+    
+    // A function to update the display of the word
+    function updateWord() {
+      var display = "";
+      for (var i = 0; i < word.length; i++) {
+        if (guessed.indexOf(word[i]) > -1) {
+          display += word[i] + " ";
+        } else {
+          display += "_ ";
+        }
+      }
+      document.getElementById("word").innerHTML = display;
+    }
+    
+    // A function to update the display of the guesses
+    function updateGuesses(letter) {
+      if (guessed.indexOf(letter) === -1) {
+        guessed.push(letter);
+        document.getElementById("guesses").innerHTML += letter + " ";
+      }
+    }
+    
+    // A function to check if the user has won
+    function checkWin() {
+      if (document.getElementById("word").innerHTML.indexOf("_") === -1) {
+        document.getElementById("message").innerHTML = "You win! 🎉";
+        document.removeEventListener("keydown", handleKeydown);
+      }
+    }
+    
+    // A function to check if the user has lost
+    function checkLose() {
+      if (wrong >= maxWrong) {
+        document.getElementById("message").innerHTML = "You lose! 😢 The word was " + word + ".";
+        document.removeEventListener("keydown", handleKeydown);
+      }
+    }
+    
+    // A function to handle the keydown event
+    function handleKeydown(event) {
+      var letter = event.key.toLowerCase();
+      if (letter >= "a" && letter <= "z") {
+        updateGuesses(letter);
+        if (word.indexOf(letter) > -1) {
+          updateWord();
+          checkWin();
+        } else {
+          wrong++;
+          checkLose();
+        }
+      }
+    }
+    
+    // Add an event listener for the keydown event
+    document.addEventListener("keydown", handleKeydown);
+  </script>
+</body>
+</html>
